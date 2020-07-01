@@ -3,6 +3,7 @@ const cors = require("cors")
 const { join } = require("path")
 const listEndpoints = require("express-list-endpoints")
 const helmet = require("helmet")
+const commentsRouter = require("./services/comments")
 
 const booksRouter = require("./services/books")
 const {
@@ -13,7 +14,7 @@ const {
 
 const server = express()
 
-const port = process.env.PORT
+const port = process.env.PORT || 3002
 
 // MIDDLEWARES
 const staticFolderPath = join(__dirname, "../public")
@@ -35,12 +36,15 @@ const corsOptions = {
   },
 }
 
-server.use(cors(corsOptions))
+server.use(cors())
 
 server.use(helmet())
 
 //ROUTES
 server.use("/books", booksRouter)
+
+//Route/comments
+server.use("/comments", commentsRouter)
 
 // ERROR HANDLERS
 server.use(badRequestHandler)
@@ -50,5 +54,5 @@ server.use(genericErrorHandler)
 console.log(listEndpoints(server))
 
 server.listen(port, () => {
-  console.log("Running on port", port)
+  console.log(`Server is running on port ${port}`)
 })
